@@ -68,17 +68,52 @@ async function submitConsultation(form: HTMLFormElement) {
     attribution_token: String(data.get("attribution_token") || "") || undefined,
   };
 
-  const response = await fetch("/api/consultation", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  const netlifyBody = new URLSearchParams();
+  netlifyBody.set("form-name", "consultation");
+  for (const [key, value] of data.entries()) {
+    if (typeof value === "string") netlifyBody.set(key, value);
+  }
+  netlifyBody.set("name", payload.name);
+  netlifyBody.set("smsConsent", payload.smsConsent ? "on" : "");
+  netlifyBody.set("landingPage", payload.landingPage);
+  netlifyBody.set("conversionPage", payload.conversionPage);
+  netlifyBody.set("referrer", payload.referrer);
+  netlifyBody.set("campaign", payload.campaign);
+  netlifyBody.set("source", payload.source);
+  netlifyBody.set("medium", payload.medium);
+  netlifyBody.set("term", payload.term);
+  netlifyBody.set("content", payload.content);
+  netlifyBody.set("gclid", payload.gclid);
+  netlifyBody.set("gbraid", payload.gbraid);
+  netlifyBody.set("wbraid", payload.wbraid);
+  netlifyBody.set("fbclid", payload.fbclid);
+  netlifyBody.set("deviceCategory", payload.deviceCategory);
+  netlifyBody.set("serviceContext", payload.serviceContext);
+  netlifyBody.set("metroContext", payload.metroContext);
+  netlifyBody.set("landingVariant", payload.landingVariant);
+
+  const [netlifyResponse, response] = await Promise.all([
+    fetch("/", {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: netlifyBody.toString(),
+    }).catch(() => null),
+    fetch("/api/consultation", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+  ]);
   const result = (await response.json().catch(() => ({}))) as { leadId?: string; message?: string };
-  if (!response.ok || !result.leadId) {
-    showStatus(form, result.message || "We could not send your request. Please call us or try again shortly.");
+  if (result.leadId) {
+    window.location.assign(`/thank-you/?ref=${encodeURIComponent(result.leadId)}`);
     return;
   }
-  window.location.assign(`/thank-you/?ref=${encodeURIComponent(result.leadId)}`);
+  if (netlifyResponse?.ok) {
+    window.location.assign("/thank-you/");
+    return;
+  }
+  showStatus(form, result.message || "We could not send your request. Please call us or try again shortly.");
 }
 
 export function SiteBehavior({ mobileNav }: { mobileNav: string }) {
