@@ -2,6 +2,7 @@
 const nextConfig = {
   trailingSlash: true,
   poweredByHeader: false,
+  output: "standalone",
   images: { unoptimized: true },
 };
 
