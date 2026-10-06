@@ -1,0 +1,83 @@
+html {
+  --font-inter: "Inter", "Segoe UI", sans-serif;
+  --font-poppins: "Poppins", "Segoe UI", sans-serif;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  transform: translateY(-120%);
+  z-index: 80;
+  background: #fff;
+  color: #231f1b;
+  padding: 0.6rem 0.9rem;
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.attribution-dialog {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  top: min(46vh, 28rem);
+  transform: translate(-50%, -50%);
+  width: min(34rem, calc(100vw - 2rem));
+  background: #fff;
+  color: #231f1b;
+  border-radius: 1.1rem;
+  box-shadow: 0 22px 65px #231f1b1f;
+  padding: 1.25rem 1.25rem 1.1rem;
+}
+
+.attribution-dialog h2 {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 1.15rem;
+  margin: 0 0 0.45rem;
+}
+
+.attribution-dialog p {
+  margin: 0;
+  color: #5f574e;
+  line-height: 1.5;
+}
+
+.attribution-dialog a {
+  color: #9e5333;
+}
+
+.attribution-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.attribution-actions button {
+  flex: 1;
+  min-height: 2.8rem;
+  border-radius: 0.7rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.attribution-decline {
+  background: #fff;
+  border: 1px solid #231f1b33;
+}
+
+.attribution-allow {
+  background: #9e5333;
+  color: #fff;
+  border: 0;
+}
+
+.form-status {
+  margin: 0.75rem 0 0;
+  color: #9e5333;
+}
+
+body.nav-open {
+  overflow: hidden;
+}
