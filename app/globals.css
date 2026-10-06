@@ -3,6 +3,10 @@ html {
   --font-poppins: "Poppins", "Segoe UI", sans-serif;
 }
 
+.site-footer .brand-logo-image {
+  filter: brightness(0) invert(1);
+}
+
 .skip-link {
   position: absolute;
   left: 1rem;
@@ -21,15 +25,22 @@ html {
 .attribution-dialog {
   position: fixed;
   z-index: 70;
-  left: 50%;
-  top: min(46vh, 28rem);
-  transform: translate(-50%, -50%);
-  width: min(34rem, calc(100vw - 2rem));
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: min(22.5rem, calc(100vw - 2rem));
   background: #fff;
   color: #231f1b;
   border-radius: 1.1rem;
   box-shadow: 0 22px 65px #231f1b1f;
   padding: 1.25rem 1.25rem 1.1rem;
+}
+
+@media (max-width: 840px) {
+  .attribution-dialog {
+    right: 0.75rem;
+    bottom: 4.75rem;
+    width: min(22.5rem, calc(100vw - 1.5rem));
+  }
 }
 
 .attribution-dialog h2 {
