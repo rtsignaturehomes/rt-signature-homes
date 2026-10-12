@@ -2,13 +2,14 @@ import { AttributionBanner } from "../components/AttributionBanner";
 import { SiteBehavior } from "../components/SiteBehavior";
 import { Tracking } from "../components/Tracking";
 import { innerHtml, loadChrome } from "../lib/content";
+import { SITE_URL } from "../lib/site";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import "../styles/site.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.rtsignaturehomes.com"),
+  metadataBase: new URL(SITE_URL),
   applicationName: "RT Signature Homes Design & Build",
   icons: {
     icon: [{ url: "/favicon.ico" }, { url: "/icon.png", type: "image/png" }],

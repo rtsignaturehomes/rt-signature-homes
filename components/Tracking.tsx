@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-const PRODUCTION_HOST = "www.rtsignaturehomes.com";
+import { SITE_HOSTS } from "../lib/site";
 
 function addScript(src: string, attributes: Record<string, string> = {}) {
   if (document.querySelector(`script[src="${src}"]`)) return;
@@ -15,7 +14,7 @@ function addScript(src: string, attributes: Record<string, string> = {}) {
 
 export function Tracking() {
   useEffect(() => {
-    if (window.location.hostname !== PRODUCTION_HOST) return;
+    if (!SITE_HOSTS.includes(window.location.hostname)) return;
 
     window.dataLayer = window.dataLayer || [];
     window.gtag = function gtag(...args: unknown[]) {

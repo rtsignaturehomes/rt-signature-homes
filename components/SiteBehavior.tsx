@@ -2,6 +2,10 @@
 
 import { useEffect } from "react";
 
+// Netlify Forms only processes POSTs to the static file it detected at deploy time.
+const NETLIFY_FORM_PATH = "/netlify-forms.html";
+const REQUEST_TIMEOUT_MS = 15000;
+
 function queryValue(name: string) {
   return new URLSearchParams(window.location.search).get(name) || "";
 }
@@ -28,6 +32,8 @@ function showStatus(form: HTMLFormElement, message: string) {
 }
 
 async function submitConsultation(form: HTMLFormElement) {
+  const submissionId = form.dataset.submissionId || crypto.randomUUID();
+  form.dataset.submissionId = submissionId;
   const data = new FormData(form);
   const startedAt = Number(form.dataset.startedAt || Date.now());
   const context = contextFromPath(window.location.pathname);
@@ -91,25 +97,45 @@ async function submitConsultation(form: HTMLFormElement) {
   netlifyBody.set("serviceContext", payload.serviceContext);
   netlifyBody.set("metroContext", payload.metroContext);
   netlifyBody.set("landingVariant", payload.landingVariant);
+  netlifyBody.set("submissionId", submissionId);
 
-  const [netlifyResponse, response] = await Promise.all([
-    fetch("/", {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      body: netlifyBody.toString(),
-    }).catch(() => null),
-    fetch("/api/consultation", {
+  // Retries reuse the submission ID, so a form Netlify already accepted is not sent again.
+  let netlifyAccepted = form.dataset.netlifyAccepted === submissionId;
+  if (!netlifyAccepted) {
+    try {
+      const netlifyResponse = await fetch(NETLIFY_FORM_PATH, {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: netlifyBody.toString(),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
+      netlifyAccepted = netlifyResponse.ok;
+      if (netlifyAccepted) form.dataset.netlifyAccepted = submissionId;
+      else console.error(`Netlify Forms rejected the consultation form with HTTP ${netlifyResponse.status}`);
+    } catch (error) {
+      console.error("Netlify Forms submission failed", error);
+    }
+  }
+
+  let result: { leadId?: string; message?: string } = {};
+  try {
+    const response = await fetch("/api/consultation", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    }),
-  ]);
-  const result = (await response.json().catch(() => ({}))) as { leadId?: string; message?: string };
+      body: JSON.stringify({ ...payload, submissionId, netlifyForms: netlifyAccepted ? "accepted" : "failed" }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+    result = (await response.json().catch(() => ({}))) as typeof result;
+    if (!response.ok) console.error(`Consultation API responded with HTTP ${response.status}`, result.message);
+  } catch (error) {
+    console.error("Consultation API request failed", error);
+  }
+
   if (result.leadId) {
     window.location.assign(`/thank-you/?ref=${encodeURIComponent(result.leadId)}`);
     return;
   }
-  if (netlifyResponse?.ok) {
+  if (netlifyAccepted) {
     window.location.assign("/thank-you/");
     return;
   }
@@ -149,8 +175,11 @@ export function SiteBehavior({ mobileNav }: { mobileNav: string }) {
       const form = event.target;
       if (!(form instanceof HTMLFormElement) || !form.classList.contains("consultation-form")) return;
       event.preventDefault();
-      if (!form.reportValidity()) return;
-      void submitConsultation(form);
+      if (!form.reportValidity() || form.dataset.submitting === "true") return;
+      form.dataset.submitting = "true";
+      void submitConsultation(form).finally(() => {
+        delete form.dataset.submitting;
+      });
     };
 
     const onChange = (event: Event) => {

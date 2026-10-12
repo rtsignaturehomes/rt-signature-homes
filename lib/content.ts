@@ -1,5 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import { SITE_URL } from "./site";
+
+const SCRAPED_ORIGIN = /https:\/\/www\.rtsignaturehomes\.com/g;
 
 export type ScrapedPage = {
   path: string;
@@ -34,7 +37,8 @@ export function listPaths() {
 }
 
 export function loadPage(urlPath: string) {
-  return JSON.parse(fs.readFileSync(pageFile(urlPath), "utf8")) as ScrapedPage;
+  const raw = fs.readFileSync(pageFile(urlPath), "utf8");
+  return JSON.parse(raw.replace(SCRAPED_ORIGIN, SITE_URL)) as ScrapedPage;
 }
 
 export function loadChrome() {
