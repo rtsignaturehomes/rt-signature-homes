@@ -1,4 +1,5 @@
 import { AttributionBanner } from "../components/AttributionBanner";
+import { GoogleReviews } from "../components/GoogleReviews";
 import { ReviewWidget } from "../components/ReviewWidget";
 import { SiteBehavior } from "../components/SiteBehavior";
 import { Tracking } from "../components/Tracking";
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <AttributionBanner />
         <SiteBehavior mobileNav={chrome.mobileNav} />
         <ReviewWidget />
+        <GoogleReviews />
         <Tracking />
       </body>
     </html>

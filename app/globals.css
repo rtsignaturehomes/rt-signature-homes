@@ -163,21 +163,19 @@ body.nav-open {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-/* Make the whole card a link to its service page (stretched-link pattern). */
-.services-overview .service-card {
+/* Make the whole service card act as a link to its service page. The clickable
+   behavior is wired up in SiteBehavior (a delegated click handler) so it works
+   reliably in production; this CSS just provides the affordance and hover. The
+   inner "Explore" link remains the real, keyboard-focusable link. */
+.service-card {
   position: relative;
+  cursor: pointer;
   transition: transform 0.16s, box-shadow 0.16s;
 }
 
-.services-overview .service-card:hover {
+.service-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 34px #231f1b1a;
-}
-
-.services-overview .service-card-content > a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
 }
 
 @media (max-width: 900px) {
@@ -215,4 +213,221 @@ body.nav-open {
 .footer-hours strong {
   color: var(--white);
   font-weight: 600;
+}
+
+/* ===== Header dropdown menus (desktop nav only) ===== */
+.desktop-nav .nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.desktop-nav .nav-item.has-dropdown > a::after {
+  content: "";
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  margin-left: 0.42em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  opacity: 0.55;
+}
+
+/* invisible bridge so the gap between the item and the panel keeps :hover */
+.desktop-nav .nav-item.has-dropdown::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 0.7rem;
+}
+
+.desktop-nav .nav-dropdown {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  left: 0;
+  z-index: 60;
+  min-width: 15rem;
+  max-width: calc(100vw - 2rem);
+  max-height: 75vh;
+  overflow-y: auto;
+  background: var(--white, #fff);
+  border: 1px solid var(--line, #231f1b1a);
+  border-radius: 0.85rem;
+  box-shadow: 0 20px 55px #231f1b26;
+  padding: 0.55rem;
+  display: grid;
+  gap: 0.1rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+}
+
+.desktop-nav .nav-item.has-dropdown:hover .nav-dropdown,
+.desktop-nav .nav-item.has-dropdown:focus-within .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.desktop-nav .nav-dropdown a {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.55rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--ink, #231f1b);
+}
+
+.desktop-nav .nav-dropdown a:hover {
+  background: #231f1b0d;
+  color: var(--ink, #231f1b);
+}
+
+.desktop-nav .nav-dropdown-mega {
+  grid-template-columns: repeat(3, minmax(9.25rem, 1fr));
+  gap: 0.08rem 0.4rem;
+}
+
+/* ===== Contact page details cards ===== */
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.contact-card {
+  background: var(--white, #fff);
+  border: 1px solid var(--line, #231f1b1a);
+  border-radius: var(--radius, 0.85rem);
+  padding: 1.25rem 1.3rem;
+}
+
+.contact-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8a7f73;
+}
+
+.contact-card p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink, #231f1b);
+  overflow-wrap: anywhere;
+}
+
+.contact-card a {
+  color: var(--terracotta-strong, #9e5333);
+  text-decoration: none;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .contact-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .contact-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Footer layout redesign ===== */
+.site-footer .footer-grid {
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.site-footer .footer-col-logo {
+  align-content: start;
+}
+
+/* Footer column labels: not headings, but styled identically to the old h2. */
+.site-footer .footer-col-title {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-poppins), Poppins, Arial, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.site-footer .footer-tagline {
+  margin: 1.1rem 0 0;
+  max-width: 24rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* Larger footer logo on all devices (horizontal mark, ~4.07:1) */
+.site-footer .brand-logo-horizontal {
+  width: 16rem;
+  height: 3.95rem;
+  max-width: 100%;
+  display: block;
+}
+
+.site-footer .footer-col-logo .brand-logo-monogram {
+  display: none;
+}
+
+.site-footer .footer-contact {
+  font-style: normal;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.site-footer .footer-contact a,
+.site-footer .footer-contact span,
+.site-footer .footer-contact p {
+  display: block;
+  margin: 0;
+}
+
+.site-footer .footer-reg {
+  font-size: 0.78rem;
+  opacity: 0.75;
+  letter-spacing: 0.02em;
+}
+
+/* Tablet: hide the Services column */
+@media (max-width: 840px) {
+  .site-footer .footer-grid {
+    grid-template-columns: auto 1fr 1.2fr;
+    gap: 2rem;
+  }
+
+  .site-footer .footer-col-services {
+    display: none;
+  }
+}
+
+/* Mobile: show only the logo, contact info, and the copyright bar */
+@media (max-width: 560px) {
+  .site-footer .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .site-footer .footer-col-quick {
+    display: none;
+  }
+
+  .site-footer .brand-logo-horizontal {
+    width: 14rem;
+    height: 3.45rem;
+  }
 }

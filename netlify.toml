@@ -7,3 +7,16 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Long-lived caching for static assets (improves repeat-visit performance and
+# the "efficient cache policy" audit). Font filenames are content-hashed, so they
+# are safe to mark immutable; images use a 30-day TTL.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"

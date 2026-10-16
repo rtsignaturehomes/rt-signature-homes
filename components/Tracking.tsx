@@ -16,6 +16,45 @@ export function Tracking() {
   useEffect(() => {
     if (!SITE_HOSTS.includes(window.location.hostname)) return;
 
+    // Defer third-party tags off the critical load path (improves LCP/TBT) while
+    // still firing reliably: whichever comes first — a user interaction or the
+    // browser going idle (with a timeout fallback). All tags are unchanged.
+    const interactionEvents = ["pointerdown", "keydown", "scroll", "touchstart"] as const;
+    let started = false;
+    let idleHandle: number | undefined;
+    const removeTriggers = () => {
+      interactionEvents.forEach((ev) => window.removeEventListener(ev, start));
+      if (idleHandle !== undefined) {
+        const w = window as unknown as { cancelIdleCallback?: (id: number) => void };
+        if (w.cancelIdleCallback) w.cancelIdleCallback(idleHandle);
+        else window.clearTimeout(idleHandle);
+      }
+    };
+
+    let detachTags = () => {};
+    function start() {
+      if (started) return;
+      started = true;
+      removeTriggers();
+      detachTags = initTags();
+    }
+
+    interactionEvents.forEach((ev) => window.addEventListener(ev, start, { once: true, passive: true }));
+    const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number })
+      .requestIdleCallback;
+    idleHandle = ric ? ric(start, { timeout: 3000 }) : window.setTimeout(start, 3000);
+
+    return () => {
+      removeTriggers();
+      detachTags();
+    };
+  }, []);
+
+  return null;
+}
+
+function initTags() {
+  {
     window.dataLayer = window.dataLayer || [];
     window.gtag = function gtag(...args: unknown[]) {
       window.dataLayer?.push(args);
@@ -53,9 +92,7 @@ export function Tracking() {
       window.removeEventListener("storage", loadAttribution);
       observer.disconnect();
     };
-  }, []);
-
-  return null;
+  }
 }
 
 declare global {

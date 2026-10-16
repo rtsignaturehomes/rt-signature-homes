@@ -153,6 +153,20 @@ export function SiteBehavior({ mobileNav }: { mobileNav: string }) {
     const onClick = (event: MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
+
+      // Whole service card acts as a link to its service page. If the click is on
+      // the card but not on an actual link/button, follow the card's inner link.
+      const serviceCard = target.closest<HTMLElement>(".service-card");
+      if (serviceCard && !target.closest("a") && !target.closest("button")) {
+        const link =
+          serviceCard.querySelector<HTMLAnchorElement>(".service-card-content a[href]") ||
+          serviceCard.querySelector<HTMLAnchorElement>("a[href]");
+        if (link) {
+          window.location.href = link.href;
+          return;
+        }
+      }
+
       if (target.closest("#mobile-navigation a")) {
         document.querySelector("#mobile-navigation")?.remove();
         document.querySelector(".mobile-menu-button")?.setAttribute("aria-expanded", "false");

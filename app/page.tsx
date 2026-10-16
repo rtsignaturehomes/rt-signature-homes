@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   ...pageMetadata("/"),
-  verification: { google: "0Y2Dv8ADArH8vCIjSgqtRHci7gm40mOlnu8JK6v4py4" },
+  verification: { google: "gAM8k2Q_Di3as300bP4ymOBJqygM-vnOYPOB-VRtF4Y" },
 };
 
 export default function HomePage() {
