@@ -92,3 +92,127 @@ html {
 body.nav-open {
   overflow: hidden;
 }
+
+.faq-table {
+  width: 100%;
+  margin-top: 1.5rem;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.faq-table th,
+.faq-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #231f1b26;
+}
+
+.faq-table thead th {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  color: #231f1b;
+}
+
+.faq-table th:first-child,
+.faq-table td:first-child {
+  width: 36%;
+  padding-left: 0;
+  padding-right: 1.5rem;
+  font-weight: 600;
+  color: #231f1b;
+}
+
+.faq-table td:last-child {
+  color: #5f574e;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .faq-table,
+  .faq-table tbody,
+  .faq-table tr,
+  .faq-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .faq-table thead {
+    display: none;
+  }
+
+  .faq-table tr {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid #231f1b26;
+  }
+
+  .faq-table td {
+    padding: 0.15rem 0;
+    border-bottom: 0;
+  }
+
+  .faq-table td:first-child {
+    width: 100%;
+    padding-right: 0;
+  }
+}
+
+/* Service-page "Our Services" overview: three cards per row (two rows of six)
+   on desktop, wrapping responsively on tablet and mobile without overflow. */
+.services-overview .card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Make the whole card a link to its service page (stretched-link pattern). */
+.services-overview .service-card {
+  position: relative;
+  transition: transform 0.16s, box-shadow 0.16s;
+}
+
+.services-overview .service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px #231f1b1a;
+}
+
+.services-overview .service-card-content > a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 900px) {
+  .services-overview .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .services-overview .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Embedded Google Map in the Local Coverage section */
+.map-embed {
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.map-embed iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: clamp(260px, 36vw, 360px);
+  border: 0;
+  border-radius: var(--radius);
+}
+
+/* Business hours line in the footer */
+.footer-hours {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.footer-hours strong {
+  color: var(--white);
+  font-weight: 600;
+}

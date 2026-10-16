@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 
 export function pageMetadata(urlPath: string): Metadata {
   const page = loadPage(urlPath);
-  const image = page.ogImage ? "/og/default.png" : undefined;
+  // Always emit a valid social preview. Page-specific ogImage values are scraped
+  // references to an opengraph-image route that does not exist in this app, so we
+  // fall back to the bundled default (public/og/default.png) for every page.
+  const image = "/og/default.png";
   return {
     title: page.title,
     description: page.description,
