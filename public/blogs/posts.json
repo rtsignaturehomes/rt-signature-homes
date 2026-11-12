@@ -1,6 +1,15 @@
 {
   "posts": [
     {
+      "id": 2127204561,
+      "slug": "midrange-bathroom-remodel",
+      "title": "How Much Does a Midrange Bathroom Remodel Cost?",
+      "excerpt": "A midrange bathroom remodel typically falls between $15,000 and $35,000. This guide breaks down what that includes, main cost drivers, timelines, and how to get a reliable estimate.",
+      "url": "https://rtsignaturehomes.com/blogs/midrange-bathroom-remodel/",
+      "publishedAt": "2026-11-12T23:30:46.714Z",
+      "image": "/blogs-images/uploads/1-renton-basement-hero.webp"
+    },
+    {
       "id": 1516608607,
       "slug": "add-home-office-room-addition",
       "title": "Should You Add a Home Office Room Addition?",
@@ -26,15 +35,6 @@
       "url": "https://rtsignaturehomes.com/blogs/replace-update-cabinets-kitchen-remodel/",
       "publishedAt": "2026-11-19T22:00:00.000Z",
       "image": "/blogs-images/uploads/1-redmond-whole-home-hero.webp"
-    },
-    {
-      "id": 2127204561,
-      "slug": "midrange-bathroom-remodel",
-      "title": "How Much Does a Midrange Bathroom Remodel Cost?",
-      "excerpt": "A midrange bathroom remodel typically falls between $15,000 and $35,000. This guide breaks down what that includes, main cost drivers, timelines, and how to get a reliable estimate.",
-      "url": "https://rtsignaturehomes.com/blogs/midrange-bathroom-remodel/",
-      "publishedAt": "2026-11-12T22:58:00.000Z",
-      "image": "/blogs-images/uploads/1-renton-basement-hero.webp"
     }
   ],
   "ownedListing": true
